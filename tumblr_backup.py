@@ -82,7 +82,7 @@ def savePost(post, save_folder, header="", use_csv=False, save_file=None):
     if use_csv:
         assert save_file, "Must specify a file to save CSV data to."
 
-    slug = post["url-with-slug"].rpartition("/")[2]
+    slug = post["id"]
     date_gmt = post["date-gmt"]
 
     if use_csv:
@@ -95,9 +95,6 @@ def savePost(post, save_folder, header="", use_csv=False, save_file=None):
         writer = csv.writer(f)
         row = [slug, date_gmt]
     else:
-        slug = byte_truncate(slug)
-        if VERSION == 3:
-            slug = slug.decode(ENCODING)
         file_name = os.path.join(save_folder, slug + ".html")
         f = codecs.open(file_name, "w", encoding=ENCODING)
 
@@ -165,7 +162,7 @@ def savePost(post, save_folder, header="", use_csv=False, save_file=None):
             row.append(caption)
             row.append('images/' + image_filename)
         else:
-            f.write(caption + '<img alt="' + caption.replace('"', '&quot;') + '" src="images/' + image_filename + '" />')
+            f.write('<img style="width=700px" alt="' + caption.replace('"', '&quot;') + '" src="images/' + image_filename + '" />' + caption )
     elif use_csv:
         # add in blank columns to maintain the correct number
         row.append('')
