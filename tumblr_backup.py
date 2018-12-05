@@ -125,6 +125,30 @@ def savePost(post, save_folder, header="", use_csv=False, save_file=None):
         row.append('')
         row.append('')
 
+    if post["type"] == "conversation":
+        title = ""
+        title_tag = post.find("conversation-title")
+        if title_tag:
+            title = unescape(title_tag.string)
+        body = ""
+        body_tag = post.find("conversation-text")
+        if body_tag:
+            body = unescape(body_tag.string)
+            body = body.replace('\n', '<br /><br />')
+
+        if use_csv:
+            row.append(title)
+            row.append(body)
+        else:
+            if title:
+                f.write("<h3>" + title + "</h3>")
+            if body:
+                f.write(body)
+    elif use_csv:
+        # add in blank columns to maintain the correct number
+        row.append('')
+        row.append('')
+
     if post["type"] == "photo":
         caption = ""
         caption_tag = post.find("photo-caption")
