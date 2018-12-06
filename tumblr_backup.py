@@ -149,6 +149,27 @@ def savePost(post, save_folder, header="", use_csv=False, save_file=None):
         row.append('')
         row.append('')
 
+    if post["type"] == "answer":
+        question = ""
+        question_tag = post.find("question")
+        if question_tag:
+            question = unescape(question_tag.string)
+        answer = ""
+        answer_tag = post.find("answer")
+        if answer_tag:
+            answer = unescape(answer_tag.string)
+
+        body = question + "<br /><hr />" + answer + "<br />"
+
+        if use_csv:
+            row.append(body)
+        else:
+            f.write(body)
+    elif use_csv:
+        # add in blank columns to maintain the correct number
+        row.append('')
+        row.append('')
+
     if post["type"] == "photo":
         caption = ""
         caption_tag = post.find("photo-caption")
